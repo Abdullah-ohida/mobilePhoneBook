@@ -1,14 +1,32 @@
 package com.userContact;
 
+import com.contactListCategory.GroupList;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Contact {
     private String[] phoneNumbers;
     private String contactName;
+    private String group;
+
     private final LocalDate entryDate = LocalDate.now();
 
     public String[] getPhoneNumber() {
         return phoneNumbers;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String groupName) {
+       ArrayList<String> groups = GroupList.getCategories();
+       for(String group : groups){
+            if(groupName.equals(group)){
+                this.group = group;
+            }
+       }
     }
 
     public void setPhoneNumber(String[] phoneNumbers) {
@@ -41,13 +59,11 @@ public class Contact {
     }
 
     public String viewContactEntry() {
-        return "Contact_name: " + contactName + printContactNumber() + "\nDate_of_entry: " + entryDate;
+        return "Contact_name: " + contactName + printContactNumber() + "\nDate_of_entry: " + entryDate + "\nGroup: " + group;
     }
 
     @Override
     public String toString() {
         return viewContactEntry();
     }
-
-
 }

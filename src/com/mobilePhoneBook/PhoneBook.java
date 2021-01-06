@@ -8,10 +8,6 @@ import java.util.Arrays;
 public class PhoneBook {
     private final ArrayList<Contact> contactEntries = new ArrayList<>();
 
-    public ArrayList<Contact> getContactEntries() {
-        return contactEntries;
-    }
-
     public int getContactEntryLength() {
         return contactEntries.size();
     }
