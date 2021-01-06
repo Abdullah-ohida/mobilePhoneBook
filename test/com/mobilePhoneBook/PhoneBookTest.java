@@ -1,5 +1,6 @@
 package com.mobilePhoneBook;
 
+import com.contactListCategory.GroupList;
 import com.userContact.Contact;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +63,8 @@ class PhoneBookTest {
         contact.setContactName("Ramon");
         contact.setPhoneNumber(new String[]{"08124524511"});
 
+
+
         myPhone.addContactToMobilePhone(myContact, anotherContact, contact);
         myPhone.printContactEntries();
 
@@ -97,7 +100,7 @@ class PhoneBookTest {
 
         myPhone.addContactToMobilePhone(myContact, contact);
 
-        myPhone.removeContactList(0);
+        myPhone.deleteContactList("yusuf");
 
         assertEquals(1,myPhone.getContactEntryLength());
     }
@@ -146,12 +149,13 @@ class PhoneBookTest {
 
         Contact anotherContact = new Contact();
         anotherContact.setContactName("Frank");
-        anotherContact.setPhoneNumber(new String[]{"08154524511", "09075615420"});
+        anotherContact.setPhoneNumber(new String[]{"08154524511", "09075615420", "09075634221"});
 
 
         myPhone.addContactToMobilePhone(n_contact, contact);
 
-        myPhone.modifyContact(contact.getContactName(), anotherContact);
+        myPhone.editContact(contact.getContactName(), anotherContact);
+        myPhone.printContactEntries();
         assertEquals(contact.getContactName(), anotherContact.getContactName());
     }
 
@@ -169,8 +173,13 @@ class PhoneBookTest {
         Contact contact = new Contact();
         contact.setContactName("Ramon");
         contact.setPhoneNumber(new String[]{"08124524511"});
+        GroupList groups = new GroupList();
+        groups.addGroup("Families");
+
+        contact.setGroup("Families");
 
         myPhone.addContactToMobilePhone(myContact, anotherContact, contact);
+        myPhone.printContactEntries();
         String[] actual = myPhone.contactNameArr();
 
         assertEquals((Arrays.toString(new String[]{"Abdullah", "Wow", "Ramon"})), Arrays.toString(actual));

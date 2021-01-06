@@ -2,6 +2,7 @@ package com.mobilePhoneBook;
 
 import com.userContact.Contact;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,14 +30,25 @@ public class PhoneBook {
     }
 
     public void printContactEntries() {
-        System.out.println("You have " + contactEntries.size() + " contact list on your mobile phone\n=======================================");
+        StringBuilder output = new StringBuilder();
         for (int count = 0; count < contactEntries.size(); count++) {
-            System.out.println((count + 1) + ". " + contactEntries.get(count) + "\n");
+           output.append(count + 1).append(". ").append(contactEntries.get(count)).append("\n");
         }
+        JOptionPane.showMessageDialog(null, output);
     }
 
-    public void removeContactList(int position) {
-        contactEntries.remove(position);
+
+    public void deleteContactList(String contactName) {
+        int deleteContact = findContactPositionByName(contactName);
+        contactEntries.remove(deleteContact);
+    }
+
+    public int findContactPositionByName(String contactName) {
+        for (Contact contactEntry : contactEntries) {
+            if (contactName.equals(contactEntry.getContactName()))
+                return contactEntries.indexOf(contactEntry);
+        }
+        return -1;
     }
 
     public Contact findContactByName(String contactName) {
@@ -59,13 +71,17 @@ public class PhoneBook {
         return null;
     }
 
-    public void modifyContact(String contactName, Contact contact) {
+    public void editContact(String contactName, Contact contact) {
         Contact existContact = findContactByName(contactName);
         if (contact.getContactName() != null) {
             existContact.setContactName(contact.getContactName());
+        }else {
+            printContactEntries();
         }
         if (contact.getPhoneNumber() != null) {
             existContact.setPhoneNumber(contact.getPhoneNumber());
+        }else {
+            printContactEntries();
         }
     }
 

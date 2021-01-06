@@ -2,6 +2,7 @@ package com.userContact;
 
 import com.contactListCategory.GroupList;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -59,6 +60,7 @@ public class Contact {
     }
 
     public String viewContactEntry() {
+        JOptionPane.showMessageDialog(null, "Contact_name: " + contactName + printContactNumber() + "\nDate_of_entry: " + entryDate + "\nGroup: " + group);
         return "Contact_name: " + contactName + printContactNumber() + "\nDate_of_entry: " + entryDate + "\nGroup: " + group;
     }
 
