@@ -1,12 +1,9 @@
 package com.mobilePhoneBook;
 
-import com.contactListCategory.GroupList;
 import com.userContact.Contact;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +12,7 @@ class PhoneBookTest {
 
     @BeforeEach
     void setUp() {
-        myPhone = new PhoneBook();
+        myPhone = new PhoneBook("081 875 0474 265");
     }
 
     @AfterEach
@@ -29,212 +26,69 @@ class PhoneBookTest {
 
     @Test
     void testIfContactCanBeAddToPhoneBook(){
-        Contact myContact = new Contact();
-        myContact.setContactName("Abdullah");
-        myContact.setPhoneNumber(new String[]{"08424524511", "09075617573"});
-
-        Contact contact = new Contact();
-        contact.setContactName("Ramon");
-        contact.setPhoneNumber(new String[]{"08126524511"});
-
-        Contact anotherContact = new Contact();
-        anotherContact.setContactName("Wow");
-        anotherContact.setPhoneNumber(new String[]{"08124574511"});
-
+        Contact myContact = Contact.createContact("Abdullah", "08424524511", null);
         myPhone.addContactToMobilePhone(myContact);
-        myPhone.addContactToMobilePhone(contact);
-        myPhone.addContactToMobilePhone(anotherContact);
-
-        myPhone.printContactEntries();
-        assertEquals(3,myPhone.getContactEntryLength());
-    }
-
-    @Test
-    void testIfMultipleContactCanBeAddToPhoneBook() {
-        Contact myContact = new Contact();
-        myContact.setContactName("Abdullah");
-        myContact.setPhoneNumber(new String[]{"08124524511"});
-
-        Contact anotherContact = new Contact();
-        anotherContact.setContactName("Ramon");
-        anotherContact.setPhoneNumber(new String[]{"08124524511"});
-
-        Contact contact = new Contact();
-        contact.setContactName("Ramon");
-        contact.setPhoneNumber(new String[]{"08124524511"});
-
-
-
-        myPhone.addContactToMobilePhone(myContact, anotherContact, contact);
-        myPhone.printContactEntries();
-
-
-        assertEquals(2,myPhone.getContactEntryLength());
-    }
-    @Test
-    void testIfContactEntriesCanBePrint(){
-        Contact myContact = new Contact();
-        myContact.setContactName("Abdullah");
-        myContact.setPhoneNumber(new String[]{"08124524511"});
-
-        Contact contact = new Contact();
-        contact.setContactName("yusuf");
-        contact.setPhoneNumber(new String[]{"08124524511"});
-
-        myPhone.addContactToMobilePhone(myContact, contact);
-
-        myPhone.printContactEntries();
-        assertEquals(2,myPhone.getContactEntryLength());
-    }
-
-    @Test
-    void checkIfContactListCanBeRemoveFromContactEntries(){
-        Contact contact = new Contact();
-        contact.setContactName("yusuf");
-        contact.setPhoneNumber(new String[]{"08124524511"});
-
-        Contact myContact = new Contact();
-        myContact.setContactName("Abdullah");
-        myContact.setPhoneNumber(new String[]{"08124524511"});
-
-
-        myPhone.addContactToMobilePhone(myContact, contact);
-
-        myPhone.deleteContactList("yusuf");
 
         assertEquals(1,myPhone.getContactEntryLength());
     }
 
     @Test
-    void testIfContactEntriesCanBeFindByName(){
+    void testIfContactEntriesCanBePrint(){
+        Contact myContact = Contact.createContact("Abdullah", "08424524511", null);
+        myPhone.addContactToMobilePhone(myContact);
 
-        Contact n_contact = new Contact();
-        n_contact.setContactName("yusuf");
-        n_contact.setPhoneNumber(new String[]{"08124524511"});
+        myPhone.printContactEntries();
+        assertEquals(1,myPhone.getContactEntryLength());
+    }
+    @Test
+    void testIfContactCanDeleteOnContactList(){
+        Contact myContact = Contact.createContact("Abdullah", "08424524511", null);
+        myPhone.addContactToMobilePhone(myContact);
 
-        Contact contact = new Contact();
-        contact.setContactName("Abdullah");
-        contact.setPhoneNumber(new String[]{"08124524511"});
+        myPhone.deleteContactList("Abdullah");
+        myPhone.printContactEntries();
 
-        myPhone.addContactToMobilePhone(contact, n_contact);
-        Contact actual = myPhone.findContactByName(contact.getContactName());
-        assertEquals(contact, actual);
+        assertEquals(0,myPhone.getContactEntryLength());
     }
 
     @Test
-    void testIfContactEntriesCanBeFindByPhoneNumber(){
-        Contact n_contact = new Contact();
-        n_contact.setContactName("yusuf");
-        n_contact.setPhoneNumber(new String[]{"08123524511", "09075617573"});
+    void testIfContactEntriesCanBeFindWithName(){
+        Contact myContact = Contact.createContact("Abdullah", "08424524511", null);
+        myPhone.addContactToMobilePhone(myContact);
 
-        Contact contact = new Contact();
-        contact.setContactName("Abdullah");
-        contact.setPhoneNumber(new String[]{"08124524511"});
-
-        myPhone.addContactToMobilePhone(contact, n_contact);
-
-        Contact actual = myPhone.findContactByNumber("08124524511");
-        assertEquals(contact, actual);
+        Contact contact = myPhone.displayContact("Abdullah");
+        assertEquals(myContact, contact);
     }
+
 
     @Test
     void checkIfContactNameCanBeChange(){
-        Contact n_contact = new Contact();
-        n_contact.setContactName("Ramon");
-        n_contact.setPhoneNumber(new String[]{"08124529511"});
+        Contact myContact = Contact.createContact("Abdullah", "08424524511", null);
+        Contact contact = Contact.createContact("Wisdom", "09085632456", "Friends");
 
-        Contact contact = new Contact();
-        contact.setContactName("Abdullah");
-        contact.setPhoneNumber(new String[]{"08124564511"});
+        myPhone.addContactToMobilePhone(myContact);
+        myPhone.addContactToMobilePhone(contact);
 
-        Contact anotherContact = new Contact();
-        anotherContact.setContactName("Frank");
-        anotherContact.setPhoneNumber(new String[]{"08154524511", "09075615420", "09075634221"});
+        myPhone.editContact(myContact.getContactName(), contact);
 
-
-        myPhone.addContactToMobilePhone(n_contact, contact);
-
-        myPhone.editContact(contact.getContactName(), anotherContact);
-        myPhone.printContactEntries();
-        assertEquals(contact.getContactName(), anotherContact.getContactName());
+        assertEquals(contact.getContactName(), "Wisdom");
     }
-
 
     @Test
     void checkIfContactNameCanBeCollectFromPhoneBook(){
-        Contact myContact = new Contact();
-        myContact.setContactName("Abdullah");
-        myContact.setPhoneNumber(new String[]{"09075617573"});
+        Contact contact = Contact.createContact("Abdullah", "09085632456", "Friends");
+        Contact myContact = Contact.createContact("Yolo", "084285524511", null);
+        Contact DoContact = Contact.createContact("Wisdom", "0908563852456", "Friends");
+        Contact newContact = Contact.createContact("Abdul", "08423r54524511", null);
 
-        Contact anotherContact = new Contact();
-        anotherContact.setContactName("Wow");
-        anotherContact.setPhoneNumber(new String[]{"08124524511"});
+        myPhone.addContactToMobilePhone(contact);
+        myPhone.addContactToMobilePhone(myContact);
+        myPhone.addContactToMobilePhone(DoContact);
+        myPhone.addContactToMobilePhone(newContact);
 
-        Contact contact = new Contact();
-        contact.setContactName("Ramon");
-        contact.setPhoneNumber(new String[]{"08124524511"});
-        GroupList groups = new GroupList();
-        groups.addGroup("Families");
-
-        contact.setGroup("Families");
-
-        myPhone.addContactToMobilePhone(myContact, anotherContact, contact);
-        myPhone.printContactEntries();
-        String[] actual = myPhone.contactNameArr();
-
-        assertEquals((Arrays.toString(new String[]{"Abdullah", "Wow", "Ramon"})), Arrays.toString(actual));
-    }
-
-
-    @Test
-    void testIfContactNameCanBeSorted(){
-        Contact myContact = new Contact();
-        myContact.setContactName("Abdullah");
-        myContact.setPhoneNumber(new String[]{"09075617573"});
-
-        Contact anotherContact = new Contact();
-        anotherContact.setContactName("Wow");
-        anotherContact.setPhoneNumber(new String[]{"08124524511"});
-
-        Contact contact = new Contact();
-        contact.setContactName("Ramon");
-        contact.setPhoneNumber(new String[]{"08124524511"});
-
-        myPhone.addContactToMobilePhone(myContact, anotherContact, contact);
-        String[] actual = myPhone.sortContactName();
-
-        assertEquals((Arrays.toString(new String[]{"Abdullah", "Ramon", "Wow"})), Arrays.toString(actual));
-    }
-
-    @Test
-    void checkIfContactListCanBeSorted(){
-        Contact myContact = new Contact();
-        myContact.setContactName("Abdullah");
-        myContact.setPhoneNumber(new String[]{"09075617573"});
-
-        Contact anotherContact = new Contact();
-        anotherContact.setContactName("Wow");
-        anotherContact.setPhoneNumber(new String[]{"08124524511"});
-
-        Contact contact = new Contact();
-        contact.setContactName("Ramon");
-        contact.setPhoneNumber(new String[]{"08124524511"});
-
-        Contact bad = new Contact();
-        bad.setContactName("Fam");
-        bad.setPhoneNumber(new String[]{"08124524511", "09076532421"});
-
-        Contact rank = new Contact();
-        rank.setContactName("Rema");
-        rank.setPhoneNumber(new String[]{"08124544511", "09076322421"});
-
-        myPhone.addContactToMobilePhone(myContact, anotherContact, contact, bad, rank);
-
-        String[] actual = myPhone.sortContactName();
         myPhone.sortContactList();
-
         myPhone.printContactEntries();
 
-        assertEquals((Arrays.toString(new String[]{"Abdullah", "Fam", "Ramon", "Rema", "Wow"})), Arrays.toString(actual));
+        assertEquals(4, myPhone.getContactEntryLength());
     }
 }

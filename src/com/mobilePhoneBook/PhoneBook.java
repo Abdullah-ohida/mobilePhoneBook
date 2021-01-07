@@ -2,53 +2,94 @@ package com.mobilePhoneBook;
 
 import com.userContact.Contact;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PhoneBook {
-    private final ArrayList<Contact> contactEntries = new ArrayList<>();
+    private final ArrayList<Contact> contactEntries;
+    private final String myNumber;
+
+    public PhoneBook(String myNumber){
+        this.myNumber = myNumber;
+        this.contactEntries = new ArrayList<>();
+    }
 
     public int getContactEntryLength() {
         return contactEntries.size();
     }
 
-    private void addContactToMobilePhone(Contact contact) {
-        String name = contact.getContactName();
-        Contact existing_contact = findContactByName(name);
-        if (existing_contact != null) {
-            return;
-        } else {
-            contactEntries.add(contact);
+    public boolean addContactToMobilePhone(Contact contact) {
+        if(findContact(contact.getContactName()) >= 0){
+            System.out.println("Contact is already on contact list");
+            return false;
         }
+        contactEntries.add(contact);
+        return true;
     }
 
-    public void addContactToMobilePhone(Contact... contacts) {
-        for (Contact contact : contacts) {
-            addContactToMobilePhone(contact);
-        }
-    }
-
-    public void printContactEntries() {
-        StringBuilder output = new StringBuilder();
-        for (int count = 0; count < contactEntries.size(); count++) {
-           output.append(count + 1).append(". ").append(contactEntries.get(count)).append("\n");
-        }
-        JOptionPane.showMessageDialog(null, output);
-    }
-
-
-    public void deleteContactList(String contactName) {
-        int deleteContact = findContactPositionByName(contactName);
-        contactEntries.remove(deleteContact);
-    }
-
-    public int findContactPositionByName(String contactName) {
-        for (Contact contactEntry : contactEntries) {
-            if (contactName.equals(contactEntry.getContactName()))
-                return contactEntries.indexOf(contactEntry);
+    private int findContact(String contactName){
+        for(int count = 0; count < contactEntries.size(); count++){
+            Contact contact = contactEntries.get(count);
+            if(contact.getContactName().equals(contactName)){
+                return count;
+            }
         }
         return -1;
+    }
+
+
+    public void printContactEntries() {
+        System.out.println("You have " + contactEntries.size() + " contact list on your mobile phone\n=======================================\n");
+        ArrayList<Contact> sorted = sortContactList();
+        for (int count = 0; count < sorted.size(); count++) {
+            System.out.println((count + 1) + ". " + sorted.get(count) + "\n");
+        }
+    }
+
+    public boolean deleteContactList(String contactName) {
+        int deleteContact = findContact(contactName);
+        if(deleteContact < 0){
+            System.out.println(contactName + " was not found!");
+            return false;
+        }
+        contactEntries.remove(deleteContact);
+        System.out.println(contactName + " was deleted!");
+        return true;
+    }
+
+    public boolean editContact(String contactName, Contact contact) {
+        int position = findContact(contactName);
+       if(position < 0){
+           System.out.println(contactName + " was not found!");
+           return false;
+       }
+       contactEntries.set(position, contact);
+        System.out.println(contactName + " was replaced with " + contact.getContactName());
+       return true;
+    }
+
+    public Contact displayContact(String contactName){
+        int position = findContact(contactName);
+        if(position >= 0){
+            return contactEntries.get(position);
+        }
+        return null;
+    }
+
+
+    private String[] contactNameArr() {
+        String [] contactNameArray = new String[contactEntries.size()];
+        for(int count = 0; count < contactEntries.size(); count++){
+            contactNameArray[count] = contactEntries.get(count).getContactName();
+        }
+        return contactNameArray;
+    }
+
+
+    private String[] sortContactName() {
+        String[] contactName = contactNameArr();
+         Arrays.sort(contactName);
+         return contactName;
     }
 
     public Contact findContactByName(String contactName) {
@@ -60,63 +101,19 @@ public class PhoneBook {
         return null;
     }
 
-    public Contact findContactByNumber(String phoneNumber) {
-        for (int count = 0; count < contactEntries.size(); count++) {
-            for (int counter = 0; counter < contactEntries.get(count).getPhoneNumber().length; counter++) {
-                if (phoneNumber.equals(contactEntries.get(counter).getPhoneNumber()[counter])) {
-                    return contactEntries.get(counter);
-                }
-            }
-        }
-        return null;
-    }
 
-    public void editContact(String contactName, Contact contact) {
-        Contact existContact = findContactByName(contactName);
-        if (contact.getContactName() != null) {
-            existContact.setContactName(contact.getContactName());
-        }else {
-            printContactEntries();
-        }
-        if (contact.getPhoneNumber() != null) {
-            existContact.setPhoneNumber(contact.getPhoneNumber());
-        }else {
-            printContactEntries();
-        }
-    }
-
-
-    public String[] contactNameArr() {
-        String [] contactNameArray = new String[contactEntries.size()];
-        for(int count = 0; count < contactEntries.size(); count++){
-            contactNameArray[count] = contactEntries.get(count).getContactName();
-        }
-        return contactNameArray;
-    }
-
-
-    public String[] sortContactName() {
-        String[] contactName = contactNameArr();
-         Arrays.sort(contactName);
-         return contactName;
-    }
-
-    public void sortContactList(){
-        String contactName = "";
+    public ArrayList<Contact> sortContactList(){
+        String contactName;
         String[] names = sortContactName();
-        Contact lastContact = null;
 
         for(int counter = 0; counter < contactEntries.size(); counter++){
             contactName = names[counter];
-            if(counter == 0){
-                lastContact = findContactByName(names[names.length - 1]);
-            }
+            int position = findContact(contactName);
             Contact contact = findContactByName(contactName);
-            if(contact == null){
-                contactEntries.set(counter, lastContact);
-            }else {
+            Contact newContact = findContactByName(contactEntries.get(counter).getContactName());
                 contactEntries.set(counter, contact);
-            }
+                contactEntries.set(position,newContact);
         }
+        return contactEntries;
     }
 }
