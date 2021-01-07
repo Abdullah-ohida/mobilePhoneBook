@@ -7,10 +7,8 @@ import java.util.Arrays;
 
 public class PhoneBook {
     private final ArrayList<Contact> contactEntries;
-    private final String myNumber;
 
     public PhoneBook(String myNumber){
-        this.myNumber = myNumber;
         this.contactEntries = new ArrayList<>();
     }
 
@@ -61,6 +59,9 @@ public class PhoneBook {
         int position = findContact(contactName);
        if(position < 0){
            System.out.println(contactName + " was not found!");
+           return false;
+       }else if(findContact(contact.getContactName()) != -1){
+           System.out.printf("Contact with name %s already exists. Unsuccessful!%n", contact.getContactName());
            return false;
        }
        contactEntries.set(position, contact);
